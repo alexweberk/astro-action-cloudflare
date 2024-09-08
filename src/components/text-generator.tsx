@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,11 +20,13 @@ export function TextGenerator() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
     const { data, error } = await actions.chat.generateText({
       prompt,
     });
     if (error) {
       setError(error.message);
+      setIsLoading(false);
       return;
     }
     setGeneratedText(data.text);
@@ -35,8 +35,6 @@ export function TextGenerator() {
 
   return (
     <Card className="w-full max-w-3xl mx-auto">
-      {" "}
-      {/* Increased max-width */}
       <CardHeader>
         <CardTitle>Text Generator</CardTitle>
       </CardHeader>
@@ -63,6 +61,7 @@ export function TextGenerator() {
               className="w-full h-32 bg-muted border-muted-foreground/20 cursor-not-allowed"
             />
           </div>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
         </form>
       </CardContent>
       <CardFooter>
